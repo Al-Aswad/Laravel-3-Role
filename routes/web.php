@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\admin\DashboardController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Middleware\IsAdmin;
+use App\Http\Middleware\IsUser;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,9 +19,23 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('login');
 });
 
-Auth::routes();
+Route::prefix('admin')
+    ->middleware(['auth', 'admin'])
+    ->group(function () {
+        Route::get('/register', [RegisterController::class, 'register'])
+            ->name('register');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+        Route::get('/', [DashboardController::class, 'index'])
+            ->name('dashboard');
+    });
+Route::middleware(['auth', 'user'])
+    ->group(function () {
+
+        Route::get('/', [DashboardController::class, 'index'])
+            ->name('dashboard');
+    });
+
+Auth::routes(['verify' => true]);

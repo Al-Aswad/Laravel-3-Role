@@ -25,8 +25,6 @@ Route::get('/', function () {
 Route::prefix('admin')
     ->middleware(['auth', 'admin'])
     ->group(function () {
-        Route::get('/register', [RegisterController::class, 'register'])
-            ->name('register');
 
         Route::get('/', [DashboardController::class, 'index'])
             ->name('dashboard');
@@ -37,5 +35,8 @@ Route::middleware(['auth', 'user'])
         Route::get('/', [DashboardController::class, 'index'])
             ->name('dashboard');
     });
+
+Route::get('/register', [RegisterController::class, 'register'])
+    ->name('register');
 
 Auth::routes(['verify' => true]);

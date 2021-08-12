@@ -17,9 +17,14 @@ class IsUser
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::user() && Auth::user()->roles == 'USER') {
+        if (Auth::user() && Auth::user()->roles == 'USER' || Auth::user()->roles == 'CO') {
             return $next($request);
+        } elseif (Auth::user() && Auth::user()->roles == 'ADMIN') {
+            return redirect('/admin');
+        } else {
+            return redirect('login');
         }
+
         return redirect('login');
     }
 }
